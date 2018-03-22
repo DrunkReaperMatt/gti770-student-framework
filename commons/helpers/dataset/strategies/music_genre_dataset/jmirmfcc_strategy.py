@@ -109,7 +109,7 @@ class MusicGenreJMIRMFCCsStrategy:
             csv_file (str): The file path to the CSV file containing the ground truth.
 
         Returns:
-            The extracted galaxy IDs and their associated encoded labels.
+            The extracted music feature vectors with their associated encoded labels.
 
         """
 
@@ -125,8 +125,8 @@ class MusicGenreJMIRMFCCsStrategy:
 
                 # For each row, store the galaxy ID and its associated class.
                 for row in reader:
-                    mfccs.append(row[25])
-                    labels.append(row[1])
+                    mfccs.append(row[1:25])
+                    labels.append(row[25])
 
         except FileNotFoundError:
             raise FileNotFoundException("CSV file not found. Please enter in parameter a valid CSV file.")
@@ -172,4 +172,4 @@ class MusicGenreJMIRMFCCsStrategy:
             return self._create_datasets(mfccs, labels, validation_size)
 
         except Exception as e:
-            raise UnableToLoadDatasetException("Unable to load galaxies data set with cause: " + str(e))
+            raise UnableToLoadDatasetException("Unable to load music data set with cause: " + str(e))
