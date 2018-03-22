@@ -132,7 +132,7 @@ class MusicGenreJMIRMFCCsStrategy:
             raise FileNotFoundException("CSV file not found. Please enter in parameter a valid CSV file.")
 
         # Transforms the lists into a vertical numpy array.
-        mfccs = np.array(mfccs).reshape(-1, 1)
+        mfccs = np.array(mfccs)
         labels = np.array(labels).reshape(-1, 1)
 
         # Declare a label encoder from scikit-learn.
