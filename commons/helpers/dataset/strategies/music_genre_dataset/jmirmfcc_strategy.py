@@ -95,8 +95,8 @@ class MusicGenreJMIRMFCCsStrategy:
         validation_labels = labels[-validation_size:]
 
         # Create the data sets.
-        data_sets.train = DataSet().withImg_names(train_mfccs).withLabels(train_labels)
-        data_sets.valid = DataSet().withImg_names(validation_mfccs).withLabels(validation_labels)
+        data_sets.train = DataSet().withFeatures(train_mfccs).withLabels(train_labels)
+        data_sets.valid = DataSet().withFeatures(validation_mfccs).withLabels(validation_labels)
 
         return data_sets
 
