@@ -109,8 +109,7 @@ class MusicGenreStrategy:
             csv_file (str): The file path to the CSV file containing the ground truth.
 
         Returns:
-            The extracted music genre and their associated encoded labels.
-
+            The extracted music feature vectors with their associated encoded labels.
         """
 
         # Declare two lists for holding song feature vector and the associated class label.
