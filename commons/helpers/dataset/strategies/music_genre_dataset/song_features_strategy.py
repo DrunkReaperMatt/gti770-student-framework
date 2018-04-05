@@ -26,9 +26,9 @@ from commons.exceptions.validationSizeException import ValidationSizeException
 from commons.helpers.dataset.dataset import DataSet
 
 
-class MusicGenreJMIRMFCCsStrategy:
+class MusicGenreStrategy:
     """
-        A class for handling data set files of type (galaxy ID, class).
+        A class for handling data set files of type (song's features, class).
     """
 
     def _is_positive(self, number):
@@ -71,7 +71,7 @@ class MusicGenreJMIRMFCCsStrategy:
         except AttributeError:
             raise ValidationSizeException("Validation size is not a valid floating point number.")
 
-    def _create_datasets(self, mfccs, labels, validation_size):
+    def _create_datasets(self, features, labels, validation_size):
 
         # Creates inner DataSets class.
         class DataSets(object):
@@ -85,54 +85,53 @@ class MusicGenreJMIRMFCCsStrategy:
         self._is_positive(validation_size)
 
         # Calculates the training set and validation set size.
-        train_size = int(np.round((1 - validation_size) * mfccs.shape[0]))
-        validation_size = int(np.round(validation_size * mfccs.shape[0]))
+        train_size = int(np.round((1 - validation_size) * features.shape[0]))
+        validation_size = int(np.round(validation_size * features.shape[0]))
 
-        # Assign the images to the training and validation data sets.
-        train_mfccs = mfccs[:train_size]
+        # Assign the songs to the training and validation data sets.
+        train_features = features[:train_size]
         train_labels = labels[:train_size]
-        validation_mfccs = mfccs[-validation_size:]
+        validation_features = features[-validation_size:]
         validation_labels = labels[-validation_size:]
 
         # Create the data sets.
-        data_sets.train = DataSet().withImg_names(train_mfccs).withLabels(train_labels)
-        data_sets.valid = DataSet().withImg_names(validation_mfccs).withLabels(validation_labels)
+        data_sets.train = DataSet().withFeatures(train_features).withLabels(train_labels)
+        data_sets.valid = DataSet().withFeatures(validation_features).withLabels(validation_labels)
 
         return data_sets
 
     def _read_labels(self, csv_file, one_hot):
-        """ Read the labels associated to a galaxy ID.
+        """ Read the labels associated to a song.
 
-        Read the label associated to a galaxy ID in the reference CSV file.
+        Read the label associated to a song in the reference CSV file.
 
         Args:
             csv_file (str): The file path to the CSV file containing the ground truth.
 
         Returns:
-            The extracted galaxy IDs and their associated encoded labels.
+            The extracted music genre and their associated encoded labels.
 
         """
 
-        # Declare two lists for holding galaxy ID reference and the associated class label.
-        mfccs = list()
+        # Declare two lists for holding song feature vector and the associated class label.
+        features = list()
         labels = list()
-        encoded_labels = list()
 
         try:
             # Open the ground truth file.
             with open(csv_file, mode="r") as ground_truth_csv:
                 reader = csv.reader(ground_truth_csv, delimiter=",")
 
-                # For each row, store the galaxy ID and its associated class.
+                # For each row, store the song features and its associated class.
                 for row in reader:
-                    mfccs.append(row[25])
+                    features.append(np.float32(row[2:(len(row) -1)]))
                     labels.append(row[1])
 
         except FileNotFoundError:
             raise FileNotFoundException("CSV file not found. Please enter in parameter a valid CSV file.")
 
         # Transforms the lists into a vertical numpy array.
-        mfccs = np.array(mfccs).reshape(-1, 1)
+        features = np.array(features)
         labels = np.array(labels).reshape(-1, 1)
 
         # Declare a label encoder from scikit-learn.
@@ -151,9 +150,9 @@ class MusicGenreJMIRMFCCsStrategy:
             encoded_labels = one_hot_encoder.fit_transform(encoded_labels)
 
         # Shuffle the data.
-        mfccs, encoded_labels = shuffle(mfccs, encoded_labels)
+        features, encoded_labels = shuffle(features, encoded_labels)
 
-        return mfccs, encoded_labels
+        return features, encoded_labels
 
     def load_dataset(self, csv_file, one_hot, validation_size):
         """ Load a data set.
@@ -161,15 +160,15 @@ class MusicGenreJMIRMFCCsStrategy:
         Args:
             csv_file: a CSV file containing ground truth and file names.
             feature_vector: a boolean. It True, will load the data set from a feature vector.
-                            If False, will load the data set required to extract galaxy image features.
+                            If False, will load the data set required to extract song features.
 
         Returns:
             A DataSet object containing training and validation set.
         """
         
         try:
-            mfccs, labels = self._read_labels(csv_file, one_hot)
-            return self._create_datasets(mfccs, labels, validation_size)
+            features, labels = self._read_labels(csv_file, one_hot)
+            return self._create_datasets(features, labels, validation_size)
 
         except Exception as e:
-            raise UnableToLoadDatasetException("Unable to load galaxies data set with cause: " + str(e))
+            raise UnableToLoadDatasetException("Unable to load music data set with cause: " + str(e))
