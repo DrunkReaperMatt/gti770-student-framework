@@ -56,7 +56,8 @@ Activate the environment :
 
 Install the requirements :
 
-`pip3 install -r requirements.txt`
+`conda install nb_conda`  
+`pip3 install -r requirements.txt`  
 `pip3 install git+https://github.com/hlin117/mdlp-discretization`
 
 To launch the script in Jupyter :  
