@@ -13,7 +13,7 @@ such as [GalaxyZoo](https://www.galaxyzoo.org), [Million Song Dataset](https://l
 Students need to complete with their own code to solve classification problems automatically using different machine learning algorithms such as KNN, Naive Bayes, SVM, Neural Networks and Decision tree/Random Forests. 
 
 This framework has many dependencies, such as OpenCV 3.x.x, scikit-learn and TensorFlow. A best practice consists of running the code using a Docker environment built with all dependencies : [Machine Learning Docker Environment](https://github.com/pldelisle/machine-learning-environment).
-This framework has some code that can be GPU-accelerated using the GPU-enabled Docker environment and an NVIDIA GPU.
+This framework has some code that can be GPU-accelerated using an NVIDIA GPU.
 
 ### Quick references
 
@@ -34,30 +34,34 @@ This framework has some code that can be GPU-accelerated using the GPU-enabled D
 * 1.5 GB free hard disk space
 * A minimum of a 4-core, 4-thread x86 CPU. 
 * A minimum of 8 GB of RAM, 16 GB or more is highly recommended.
-* PyCharm Professional IDE (optional, recommended when using a Docker container as execution environment).
+* PyCharm Professional IDE (optional).
 
 ### Notes
 
 OpenCV and TensorFlow, can be GPU-accelerated using NVIDIA GPU. 
 
-The OpenCV version required to run this code is OpenCV 3.3.x. OpenCV must be compiled for Python3.
+The OpenCV version required to run this code is OpenCV 3.3.x+. OpenCV must be compiled for Python3.
 
 
 ### Usage
 
 #### Getting started
 
-Ensure you have an environment variable according to this table : 
+Create an Anaconda virtual environment with Python minimum version 3.5 : 
 
-| With Docker                                     || Without Docker                              ||  
-|:--------------:|:-------------------------------:|:-----------------:|:------------------------:|  
-| Name           | Value                           | Name              | Value                    |  
-| VIRTUAL_ENV    | /home/ubuntu/ml_venv/project    | VIRTUAL_ENV       |  /home/ubuntu/ml_venv/   |  
+`conda create --name gti770_env python=3.5`  
 
+Activate the environment :
+`source activate gti770_env`
 
-To launch the script :  
+Install the requirements :
+
+`pip3 install -r requirements.txt`
+`pip3 install git+https://github.com/hlin117/mdlp-discretization`
+
+To launch the script in Jupyter :  
 `cd core`  
-`python3 main.py`
+`jupiter notebook`
 
 
 ### How to contribute ?
