@@ -456,31 +456,3 @@ class GalaxyProcessor(object):
         red_histogram = cv2.calcHist(img_color, [2], None, [256], [0, 256])
 
         return np.array([blue_histogram, green_histogram, red_histogram])
-
-    def get_features(self, image_file, id, label):
-        """ Get the image's features.
-
-        A wrapping method to get the image's features.
-
-        Place your code here.
-
-        Args:
-            image_file: the image's file being processed.
-
-        Returns:
-            features: a feature vector of N dimensions for N features.
-        """
-
-        print("Processing file : " + image_file)
-
-        # Declare a list for storing computed features.
-        features = list()
-
-        img_color = cv2.imread(filename=image_file)
-
-        # A feature given to student as example. Not used in the following code.
-        color_histogram = self.get_color_histogram(img_color=img_color)
-
-        features = np.append(features, color_histogram)
-        
-        return features
