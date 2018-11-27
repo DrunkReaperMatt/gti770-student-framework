@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-from custom.lab04.train import Train
 from sklearn.preprocessing import MinMaxScaler, KBinsDiscretizer, LabelEncoder
-
+from sklearn.ensemble import VotingClassifier
 
 class Traitement(object):
 
@@ -27,4 +26,5 @@ class Traitement(object):
 
     def Labels(self, Y):
         lbl = LabelEncoder()
-        return lbl.fit(Y)
+        return lbl.fit_transform(Y)
+
