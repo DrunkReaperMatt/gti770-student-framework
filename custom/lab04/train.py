@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
-from sklearn.svm import SVC, LinearSVC
-from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV, cross_val_score
 from sklearn.ensemble import VotingClassifier
 
 
@@ -40,6 +40,13 @@ class Train(object):
         vclf.fit(X, Y)
         return vclf.predict(trainX)
 
+    def AccuracyScore(self, clf, X, Y, cv=10):
+        score = cross_val_score(clf, X, Y, cv=cv)
+        return score.mean()
+
+    def F1Score(self, clf, X, Y, cv=10):
+        score = cross_val_score(clf, X, Y, cv=cv, scoring='f1_macro')
+        return score.mean()
 
     ## Too powerfull, do not use
     def ParameterOptimizer(self, X, Y, cv=10):
