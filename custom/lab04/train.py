@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score
@@ -8,12 +8,9 @@ from sklearn.ensemble import VotingClassifier
 
 class Train(object):
 
-    ## KNN
-    def Uniform(self, k=1):
-        return KNeighborsClassifier(n_neighbors=k, weights='uniform', algorithm='auto')
-
-    def Distance(self, k=1):
-        return KNeighborsClassifier(n_neighbors=k, weights='distance', algorithm='auto')
+    ## Decision Tree
+    def DepthK(self, k):
+        return DecisionTreeClassifier(max_depth=k)
 
     ## Bayes
     # Gaussian Naive Bayes
@@ -35,6 +32,7 @@ class Train(object):
     def RBF(self, c=1e-3, gamma=1e-3, weight='balanced'):
         return SVC(kernel='rbf', gamma=gamma, C=c, class_weight=weight)
 
+
     def Vote(self, X, Y, trainX, classifiers):
         vclf = VotingClassifier(classifiers, n_jobs=-1)
         vclf.fit(X, Y)
@@ -50,10 +48,10 @@ class Train(object):
 
     ## Too powerfull, do not use
     def ParameterOptimizer(self, X, Y, cv=10):
-        svmhp = {'C': [1, 10], 'gamma': [.1, 2], 'kernel': ['rbf', 'linear'], 'class_weight': ['balanced', None]}
-        svc = SVC()
+        svmhp = {'C': np.logspace(-3, 6, 10), 'gamma': np.logspace(-8, 1, 10)}
+        svc = SVC(kernel="rbf")
         gcv = GridSearchCV(svc, svmhp, cv=cv)
         gcv.fit(X, Y)
 
-        return gcv.cv_results_
+        return gcv
 
