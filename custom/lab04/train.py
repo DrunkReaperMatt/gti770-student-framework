@@ -32,11 +32,10 @@ class Train(object):
     def RBF(self, c=1e-3, gamma=1e-3, weight='balanced'):
         return SVC(kernel='rbf', gamma=gamma, C=c, class_weight=weight)
 
-
-    def Vote(self, X, Y, trainX, classifiers):
+    ## Classe de vote
+    def Vote(self, X, Y, classifiers):
         vclf = VotingClassifier(classifiers, n_jobs=-1)
-        vclf.fit(X, Y)
-        return vclf.predict(trainX)
+        return vclf.fit(X, Y)
 
     def AccuracyScore(self, clf, X, Y, cv=10):
         score = cross_val_score(clf, X, Y, cv=cv)
